@@ -14,8 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.myapplicationrecycle_view.Retrofit.INodeJS;
+import com.example.myapplicationrecycle_view.Retrofit.RetrofitClient;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.disposables.CompositeDisposable;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements RecyclerAdapter.OnclickListener {
 
@@ -25,10 +31,31 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
     List<String> moviesList;
     int student_number=0;
     String[] name_list = new String[80];
+
+    INodeJS myAPI;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    @Override
+    protected void onStop() {
+        compositeDisposable.clear();
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        compositeDisposable.clear();
+        super.onDestroy();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Init API
+        Retrofit retrofit = RetrofitClient.getInstance();
+        myAPI = retrofit.create(INodeJS.class);
+
         thread_find_user a = new thread_find_user();
         a.start();
         a.run();
