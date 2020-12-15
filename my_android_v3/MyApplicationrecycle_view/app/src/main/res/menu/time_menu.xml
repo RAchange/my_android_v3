@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item android:id="@+id/one_month"
+            android:title="一個月內"
+            ></item>
+        <item android:id="@+id/one_week"
+            android:title="一個星期內"
+            ></item>
+
+</menu>
