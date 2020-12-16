@@ -3,24 +3,24 @@ package com.example.myapplicationrecycle_view;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.myapplicationrecycle_view.Retrofit.INodeJS;
 import com.example.myapplicationrecycle_view.Retrofit.RetrofitClient;
+import com.example.myapplicationrecycle_view.Retrofit.User;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity implements RecyclerAdapter.OnclickListener {
@@ -56,29 +56,35 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
         Retrofit retrofit = RetrofitClient.getInstance();
         myAPI = retrofit.create(INodeJS.class);
 
-        thread_find_user a = new thread_find_user();
-        a.start();
-        a.run();
-        try {
-            a.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        name_list = a.get_name();
-        student_number = a.get_student_number();
-        System.out.println(student_number);
+        getPatientList();
+    }
 
-        moviesList = new ArrayList<>();
-        for(int i=0;i<student_number;i++){
-            moviesList.add(name_list[i]);
-        }
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerAdapter = new RecyclerAdapter(moviesList, this);
+    private void getPatientList() {
+        moviesList = new ArrayList<String>();
+
+        Call<List<User>> call = myAPI.getPatientList();
+
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                for(User user : response.body())
+                    moviesList.add(user.getName());
+
+                recyclerView = findViewById(R.id.recyclerView);
+                recyclerAdapter = new RecyclerAdapter(moviesList, MainActivity.this);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(recyclerAdapter);
+                recyclerView.setAdapter(recyclerAdapter);
 
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
+                DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL);
+                recyclerView.addItemDecoration(dividerItemDecoration);
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+
+            }
+        });
+
     }
 
     @Override

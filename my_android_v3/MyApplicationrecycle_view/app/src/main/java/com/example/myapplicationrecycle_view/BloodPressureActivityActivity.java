@@ -30,6 +30,7 @@ import com.anychart.enums.TooltipPositionMode;
 import com.anychart.graphics.vector.Stroke;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class BloodPressureActivityActivity extends AppCompatActivity {
         setContentView(R.layout.activity_blood_pressure_activity);
 
         Intent intent = getIntent();
-        String[] blood_pressure_list = intent.getStringArrayExtra("blood_data");
+        int[] blood_pressure_list = intent.getIntArrayExtra("blood_data");
         String id = intent.getStringExtra("id_data");
         String name = intent.getStringExtra("name_data");
         TextView title = (TextView)findViewById(R.id.textView2);
@@ -82,14 +83,14 @@ public class BloodPressureActivityActivity extends AppCompatActivity {
         cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
 
         List<DataEntry> seriesData = new ArrayList<>();
-        for(int i=1 ;i<11 ;i++){
-            String month = "12/";
-            String date = month + Integer.toString(i);
-            if(blood_pressure_list[i] == null){
-                seriesData.add(new ValueDataEntry(date,150));
-                continue;
-            }
-            seriesData.add(new ValueDataEntry(date,Integer.valueOf(blood_pressure_list[i-1])));
+
+        LocalDate now = LocalDate.now();
+        String month = Integer.toString(now.getMonthValue());
+        int maxn = Integer.min( blood_pressure_list.length, 10);
+        for(int i=maxn;i>0;i--){
+            String day = Integer.toString(now.getDayOfMonth()-i);
+            String date = month + "/" + day;
+            seriesData.add(new ValueDataEntry(date,blood_pressure_list[i - 1]));
         }
         /*seriesData.add(new CustomDataEntry("1986", 3.6, 2.3, 2.8));
         seriesData.add(new CustomDataEntry("1987", 7.1, 4.0, 4.1));

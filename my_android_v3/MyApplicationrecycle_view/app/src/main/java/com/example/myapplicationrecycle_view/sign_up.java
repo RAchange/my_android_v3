@@ -52,6 +52,7 @@ public class sign_up extends AppCompatActivity {
         EditText editText2 = (EditText)findViewById(R.id.input_email);
         EditText editText3 = (EditText)findViewById(R.id.inputPassword);
 
+        // Event
         sign_up.setOnClickListener(new View.OnClickListener() {
             //@Override
             public void onClick(View view) {

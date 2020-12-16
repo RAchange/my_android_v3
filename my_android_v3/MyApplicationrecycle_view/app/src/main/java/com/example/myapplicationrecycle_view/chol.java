@@ -26,6 +26,7 @@ import com.anychart.enums.Position;
 import com.anychart.enums.TooltipPositionMode;
 
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class chol extends AppCompatActivity {
         setContentView(R.layout.activity_heart);
         Intent intent = getIntent();
 
-        String[] chol_list = intent.getStringArrayExtra("extra_data");
+        int[] chol_list = intent.getIntArrayExtra("extra_data");
         String id = intent.getStringExtra("id_data");
         String name = intent.getStringExtra("name_data");
         TextView title = (TextView)findViewById(R.id.textView2);
@@ -59,15 +60,14 @@ public class chol extends AppCompatActivity {
         Cartesian cartesian = AnyChart.column();
 
         List<DataEntry> data = new ArrayList<>();
-        for(int i=0;i<10;i++){
-            String month = "12/";
-            String day = Integer.toString(i+1);
-            day = month + day;
-            if(chol_list[i] == null){
-                data.add(new ValueDataEntry(day,150));
-                continue;
-            }
-            data.add(new ValueDataEntry(day,Integer.parseInt(chol_list[i])));
+
+        LocalDate now = LocalDate.now();
+        String month = Integer.toString(now.getMonthValue());
+        int maxn = Integer.min( chol_list.length, 10);
+        for(int i=maxn;i>0;i--){
+            String day = Integer.toString(now.getDayOfMonth()-i);
+            day = month + "/" + day;
+            data.add(new ValueDataEntry(day, chol_list[i]));
         }
         /*data.add(new ValueDataEntry("Rouge", 80540));
         data.add(new ValueDataEntry("Foundation", 94190));
