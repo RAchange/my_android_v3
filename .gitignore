@@ -1,2 +1,3 @@
-./RestfulAPI/node_modules/**
-./RestfulAPI/package-lock.json
+RestfulAPI/node_modules/
+RestfulAPI/node_modules/**
+RestfulAPI/package-lock.json
