@@ -36,6 +36,17 @@ public class chol extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heart);
+
+        // logout button
+        final Button logout = (Button)findViewById(R.id.logout_button3);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( chol.this, login_main.class);
+                startActivity(intent);
+            }
+        });
+
         Intent intent = getIntent();
 
         int[] chol_list = intent.getIntArrayExtra("extra_data");

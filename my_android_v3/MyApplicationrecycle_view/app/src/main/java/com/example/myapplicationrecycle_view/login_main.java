@@ -1,8 +1,10 @@
 package com.example.myapplicationrecycle_view;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -45,6 +47,23 @@ public class login_main extends AppCompatActivity {
     protected void onDestroy() {
         compositeDisposable.clear();
         super.onDestroy();
+    }
+
+    // detected 返回鍵 ,避免登出後用返回鍵回到裡面
+    public boolean onKeyDown(int KeyCode, KeyEvent event){
+        if(KeyCode == KeyEvent.KEYCODE_BACK){
+            AlertDialog.Builder alert = new AlertDialog.Builder(login_main.this);
+            alert.setTitle("登入");
+            alert.setMessage("請先登入...");
+            alert.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            alert.show();
+        }
+        return true;
     }
 
     @Override

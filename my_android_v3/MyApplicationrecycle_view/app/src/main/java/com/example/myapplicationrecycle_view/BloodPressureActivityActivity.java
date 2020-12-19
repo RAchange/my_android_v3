@@ -41,6 +41,16 @@ public class BloodPressureActivityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blood_pressure_activity);
 
+        // logout button
+        final Button logout = (Button)findViewById(R.id.logout_button2);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( BloodPressureActivityActivity.this, login_main.class);
+                startActivity(intent);
+            }
+        });
+
         Intent intent = getIntent();
         int[] blood_pressure_list = intent.getIntArrayExtra("blood_data");
         String id = intent.getStringExtra("id_data");

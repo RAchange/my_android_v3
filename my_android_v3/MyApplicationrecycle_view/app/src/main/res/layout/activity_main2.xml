@@ -1,5 +1,22 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:id="@+id/container" android:layout_width="match_parent" android:layout_height="match_parent" android:paddingTop="?attr/actionBarSize">
-    <com.google.android.material.bottomnavigation.BottomNavigationView android:id="@+id/nav_view" android:layout_width="0dp" android:layout_height="wrap_content" android:gravity="center_horizontal" android:layout_marginStart="0dp" android:layout_marginEnd="0dp" android:background="?android:attr/windowBackground" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintRight_toRightOf="parent" app:menu="@menu/bottom_nav_menu"/>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
     <fragment
         android:id="@+id/nav_host_fragment"
@@ -17,7 +34,15 @@
         app:layout_constraintVertical_bias="0.0"
         app:navGraph="@navigation/mobile_navigation" />
 
-    <ImageView android:id="@+id/store_icon" android:layout_width="346dp" android:layout_height="105dp" android:layout_marginLeft="28dp" app:layout_constraintBottom_toTopOf="@id/store_icon" app:layout_constraintLeft_toLeftOf="parent" android:gravity="center_horizontal" app:srcCompat="@drawable/cs05_orig"/>
+    <ImageView
+        android:id="@+id/store_icon"
+        android:layout_width="346dp"
+        android:layout_height="105dp"
+        android:layout_marginLeft="28dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@id/store_icon"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:srcCompat="@drawable/cs05_orig" />
 
     <TextView
         android:id="@+id/name"
@@ -64,14 +89,15 @@
         android:id="@+id/chol"
         android:layout_width="92dp"
         android:layout_height="45dp"
-        android:layout_marginLeft="160dp"
+        android:layout_marginLeft="156dp"
         android:layout_marginTop="304dp"
         android:layout_marginBottom="35dp"
         android:background="#1CCB4E"
         android:text="膽固醇"
         app:layout_constraintBottom_toTopOf="@+id/return_to_up_page"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/store_icon" />
+        app:layout_constraintTop_toBottomOf="@id/store_icon"
+        app:layout_constraintVertical_bias="0.59" />
 
     <Button
         android:id="@+id/Basal_metabolic_rate"
@@ -79,10 +105,39 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="264dp"
         android:layout_marginTop="196dp"
+        android:layout_marginEnd="60dp"
         android:background="#1AD61A"
         android:text="心率"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/store_icon" />
-    <Button android:id="@+id/return_to_up_page" android:layout_width="124dp" android:layout_height="45dp" android:layout_marginLeft="148dp" android:layout_marginTop="384dp" android:text="返回上一頁" app:layout_constraintLeft_toLeftOf="parent" android:gravity="center_horizontal" app:layout_constraintTop_toBottomOf="@id/store_icon"/>
-    <ImageView android:id="@+id/imageView3" android:layout_width="165dp" android:layout_height="125dp" android:layout_marginLeft="28dp" android:layout_marginTop="24dp" app:layout_constraintLeft_toLeftOf="parent" app:layout_constraintTop_toBottomOf="@id/store_icon" app:srcCompat="@drawable/people"/>
+
+    <Button
+        android:id="@+id/return_to_up_page"
+        android:layout_width="124dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="140dp"
+        android:layout_marginTop="428dp"
+        android:gravity="center_horizontal"
+        android:text="返回上一頁"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/store_icon" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="165dp"
+        android:layout_height="125dp"
+        android:layout_marginLeft="28dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/store_icon"
+        app:srcCompat="@drawable/people" />
+
+    <Button
+        android:id="@+id/logout_button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

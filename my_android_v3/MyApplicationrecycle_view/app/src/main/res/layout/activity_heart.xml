@@ -7,6 +7,14 @@
     tools:context=".heart">
 
 
+    <Button
+        android:id="@+id/logout_button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="420dp"
@@ -21,8 +29,8 @@
         android:id="@+id/textView2"
         android:layout_width="264dp"
         android:layout_height="115dp"
-        android:layout_marginLeft="84dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginLeft="72dp"
+        android:layout_marginTop="12dp"
         android:gravity="center_horizontal"
         android:text=""
         android:textSize="25dp"
@@ -33,7 +41,7 @@
         android:id="@+id/any_chart_view"
         android:layout_width="294dp"
         android:layout_height="307dp"
-        android:layout_marginLeft="72dp"
+        android:layout_marginLeft="56dp"
         android:layout_marginTop="12dp"
         android:gravity="center_horizontal"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -45,7 +53,7 @@
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="164dp"
+        android:layout_marginLeft="156dp"
         android:layout_marginTop="364dp"
         android:text="返回上一頁"
         app:layout_constraintLeft_toLeftOf="parent"

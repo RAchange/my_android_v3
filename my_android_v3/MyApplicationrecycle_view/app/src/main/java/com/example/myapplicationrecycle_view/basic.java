@@ -35,6 +35,16 @@ public class basic extends AppCompatActivity {
         setContentView(R.layout.activity_basic);
         Intent intent = getIntent();
 
+        // logout button
+        final Button logout = (Button)findViewById(R.id.logout_button);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent( basic.this, login_main.class);
+                startActivity(intent);
+            }
+        });
+
         int[] thalach_list = intent.getIntArrayExtra("extra_data");
         String id = intent.getStringExtra("id_data");
         String name = intent.getStringExtra("name_data");

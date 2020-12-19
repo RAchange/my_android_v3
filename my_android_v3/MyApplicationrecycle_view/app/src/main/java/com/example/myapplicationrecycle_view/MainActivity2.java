@@ -53,6 +53,16 @@ public class MainActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
+        // logout button
+        final Button logout = (Button)findViewById(R.id.logout_button4);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity2.this, login_main.class);
+                startActivity(intent);
+            }
+        });
+
         //傳姓名進來
         Intent intent = getIntent();
         String name = intent.getStringExtra("name_data");
