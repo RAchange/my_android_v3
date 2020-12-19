@@ -27,6 +27,9 @@ public interface INodeJS {
     Observable<String> loginUser(@Field("email") String email,
                                     @Field("password")String password);
 
+    @GET("getPublicKey")
+    Call<String> getPublicKey(@Query("name") String name);
+
     @GET("getPatientList")
     Call<List<User>> getPatientList();
 

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplicationrecycle_view.Crypto.Base64Coder;
 import com.example.myapplicationrecycle_view.Retrofit.INodeJS;
 import com.example.myapplicationrecycle_view.Retrofit.RetrofitClient;
 
@@ -21,12 +22,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class login_main extends AppCompatActivity {
 
     INodeJS myAPI;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+
+    byte[] snsPublicKey = null;
 
     @Override
     protected void onStop() {
@@ -87,6 +94,25 @@ public class login_main extends AppCompatActivity {
     }
 
     private void loginUser(String email, String password) {
+        Call<String> getPublicKeyAPI = myAPI.getPublicKey(email);
+        getPublicKeyAPI.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                try {
+                    snsPublicKey = Base64Coder.decodeHex(response.body());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+
+        while (snsPublicKey.equals(null));
+
         compositeDisposable.add(myAPI.loginUser(email, password)
         .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
