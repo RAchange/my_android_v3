@@ -1,6 +1,9 @@
 package com.example.myapplicationrecycle_view.Crypto;
 
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
+
 import java.security.Key;
 
 import javax.crypto.Cipher;
@@ -40,5 +43,29 @@ public abstract class AESCoder {
         kg.init(256);
         SecretKey secretKey = kg.generateKey();
         return secretKey.getEncoded();
+    }
+
+    public static String initKeyString() throws Exception {
+        return Base64.encodeBase64String(initKey());
+    }
+
+    public static byte[] getKey(String key) throws Exception {
+        return Base64.decodeBase64(key);
+    }
+
+    public static byte[] decrypt(byte[] data, String key) throws Exception {
+        return decrypt(data, getKey(key));
+    }
+
+    public static byte[] encrypt(byte[] data, String key) throws Exception {
+        return encrypt(data, getKey(key));
+    }
+
+    public static String shaHex(byte[] data) {
+        return DigestUtils.md5Hex(data);
+    }
+
+    public static boolean validate(byte[] data, String messageDigest) {
+        return messageDigest.equals(shaHex(data));
     }
 }
