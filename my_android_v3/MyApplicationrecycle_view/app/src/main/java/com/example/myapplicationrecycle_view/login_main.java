@@ -94,6 +94,7 @@ public class login_main extends AppCompatActivity {
     }
 
     private void loginUser(String email, String password) {
+        /*
         Call<String> getPublicKeyAPI = myAPI.getPublicKey(email);
         getPublicKeyAPI.enqueue(new Callback<String>() {
             @Override
@@ -111,15 +112,15 @@ public class login_main extends AppCompatActivity {
             }
         });
 
-        while (snsPublicKey.equals(null));
-
+        while (snsPublicKey == null);
+        */
         compositeDisposable.add(myAPI.loginUser(email, password)
         .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Consumer<String>() {
                 @Override
                 public void accept(String s) throws Exception {
-                    if(s.contains("encrypted_password")) {
+                    if(s.contains("successful")) {
                         Toast.makeText(login_main.this, "Login Success", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(login_main.this, MainActivity.class);
                         startActivity(intent);
