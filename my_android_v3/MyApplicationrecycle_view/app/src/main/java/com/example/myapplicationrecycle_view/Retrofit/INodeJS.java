@@ -31,7 +31,7 @@ public interface INodeJS {
     Call<String> getPublicKey(@Query("name") String name);
 
     @GET("getPatientList")
-    Call<List<User>> getPatientList();
+    Call<List<User>> getPatientList(@Query("user") String user, @Query("token") String token);
 
     @GET("getChol")
     Call<List<Chol>> getChol(@Query("id") int id);
