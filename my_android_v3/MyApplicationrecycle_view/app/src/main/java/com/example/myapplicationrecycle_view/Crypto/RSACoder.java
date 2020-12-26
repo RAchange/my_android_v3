@@ -1,6 +1,7 @@
 package com.example.myapplicationrecycle_view.Crypto;
 
 import org.apache.commons.codec.binary.Hex;
+import org.bouncycastle.crypto.encodings.PKCS1Encoding;
 
 import java.security.Key;
 import java.security.KeyFactory;
@@ -11,8 +12,11 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +25,7 @@ import javax.crypto.Cipher;
 public abstract class RSACoder {
 
     public static final String KEY_ALGORITHM = "RSA";
+    public static final String CIPHER_ALGORITHM = "RSA/ECB/OAEPWithSHA1AndMGF1Padding";
 
     public static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
     private static final String PUBLIC_KEY = "RSAPublicKey";
@@ -52,7 +57,7 @@ public abstract class RSACoder {
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(key);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         PrivateKey privateKey = keyFactory.generatePrivate(pkcs8KeySpec);
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+        Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         return cipher.doFinal(data);
     }
@@ -61,7 +66,7 @@ public abstract class RSACoder {
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(key);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         PublicKey publicKey = keyFactory.generatePublic(x509KeySpec);
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+        Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
         cipher.init(Cipher.DECRYPT_MODE, publicKey);
         return cipher.doFinal(data);
     }
@@ -70,7 +75,7 @@ public abstract class RSACoder {
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(key);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         PublicKey publicKey = keyFactory.generatePublic(x509KeySpec);
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+        Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         return cipher.doFinal(data);
     }
@@ -79,7 +84,7 @@ public abstract class RSACoder {
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(key);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         PrivateKey privateKey = keyFactory.generatePrivate(pkcs8KeySpec);
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+        Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
         cipher.init(Cipher.ENCRYPT_MODE, privateKey);
         return cipher.doFinal(data);
     }

@@ -14,8 +14,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.myapplicationrecycle_view.Crypto.Base64Coder;
+import com.example.myapplicationrecycle_view.Crypto.PKCS1ToSubjectPublicKeyInfo;
+import com.example.myapplicationrecycle_view.Crypto.RSACoder;
 import com.example.myapplicationrecycle_view.Retrofit.INodeJS;
 import com.example.myapplicationrecycle_view.Retrofit.RetrofitClient;
+
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.binary.Hex;
+
+import java.util.Base64;
 
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,9 +38,6 @@ public class login_main extends AppCompatActivity {
 
     INodeJS myAPI;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-
-    byte[] snsPublicKey = null;
 
     @Override
     protected void onStop() {
@@ -69,7 +73,11 @@ public class login_main extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginUser(editText1.getText().toString(), editText2.getText().toString());
+                try {
+                    loginUser(editText1.getText().toString(), editText2.getText().toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -93,14 +101,38 @@ public class login_main extends AppCompatActivity {
         });
     }
 
-    private void loginUser(String email, String password) {
-        /*
+    private void loginUser(String email, String password) throws Exception {
+
         Call<String> getPublicKeyAPI = myAPI.getPublicKey(email);
         getPublicKeyAPI.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 try {
-                    snsPublicKey = Base64Coder.decodeHex(response.body());
+                    String pubKey = response.body();
+                    if(pubKey.contains("error")) {
+                        Toast.makeText(login_main.this, ""+pubKey, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    byte[] snsPublicKey = PKCS1ToSubjectPublicKeyInfo.createSubjectPublicKeyInfoEncoding(Base64.getDecoder().decode(response.body())) ;
+                    String encryptedPassword = Base64.getEncoder().encodeToString(RSACoder.encryptByPublicKey(password.getBytes(), snsPublicKey));
+                    compositeDisposable.add(myAPI.loginUser(email, encryptedPassword)
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Consumer<String>() {
+                                @Override
+                                public void accept(String s) throws Exception {
+                                    if(s.contains("successful")) {
+                                        Toast.makeText(login_main.this, "Login Success", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(login_main.this, MainActivity.class);
+                                        intent.putExtra("snsPublicKey", snsPublicKey);
+                                        intent.putExtra("password", password);
+                                        intent.putExtra("user", email);
+                                        startActivity(intent);
+                                    }
+                                    else
+                                        Toast.makeText(login_main.this, ""+s, Toast.LENGTH_SHORT).show(); // Else just show error from API
+                                }
+                            }));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -111,24 +143,6 @@ public class login_main extends AppCompatActivity {
 
             }
         });
-
-        while (snsPublicKey == null);
-        */
-        compositeDisposable.add(myAPI.loginUser(email, password)
-        .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Consumer<String>() {
-                @Override
-                public void accept(String s) throws Exception {
-                    if(s.contains("successful")) {
-                        Toast.makeText(login_main.this, "Login Success", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(login_main.this, MainActivity.class);
-                        startActivity(intent);
-                    }
-                    else
-                        Toast.makeText(login_main.this, ""+s, Toast.LENGTH_SHORT).show(); // Else just show error from API
-                }
-            }));
     }
 
 

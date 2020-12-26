@@ -3,6 +3,9 @@ package com.example.myapplicationrecycle_view.Crypto;
 
 import org.bouncycastle.util.encoders.Base64;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 public abstract class Base64Coder {
 
     public final static String ENCODING = "UTF-8";
