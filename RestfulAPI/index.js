@@ -154,7 +154,7 @@ app.get('/getPatientList/', (req, res, next)=>{
 
     con.query('SELECT * FROM user WHERE name=? OR email=?;', [user, user], function (error, result, fields) {
         if(error){
-            console.log('[MySQL ERROR]', error);
+            console.log('[MySQL error]', error);
         }
         if(result && result.length==1) {
             const private_key = result[0].private_key;
@@ -170,7 +170,7 @@ app.get('/getPatientList/', (req, res, next)=>{
                 else{
                     var msgName = message[0];
                     var msgPassword = message[1];
-                    var aesKey = base64.decodeHex(message[2]);
+                    var aesKey = message[2];
                     // Hash password from Login request with salt in Database
                     var hashed_password = checkHashPassword(msgPassword, salt).passwordHash;
 
@@ -179,7 +179,7 @@ app.get('/getPatientList/', (req, res, next)=>{
                             if(error){
                                 console.log('[MySQL error]', error);
                             }
-                            res.end(JSON.stringify(result));
+                            res.end(aes.encrypt(JSON.stringify(result), aesKey));
                         });
                     }
                     else
@@ -191,32 +191,131 @@ app.get('/getPatientList/', (req, res, next)=>{
 });
 
 app.get('/getChol/', (req, res, next)=>{
-    const id = req.query.id;
-    con.query('SELECT chol FROM heart WHERE id=?;', [id], function(error, result, fields){
+    const query = req.query;
+    const token = query.token;
+    const user = query.user;
+    con.query('SELECT * FROM user WHERE name=? OR email=?;', [user, user], function (error, result, fields) {
         if(error){
-            console.log('[MySQL ERROR]', error);
+            console.log('[MySQL error]', error);
         }
-        res.end(JSON.stringify(result));
+        if(result && result.length==1) {
+            const private_key = result[0].private_key;
+            const name = result[0].name;
+            const email = result[0].email;
+            const uid = result[0].unique_id;
+            const encrypted_password = result[0].encrypted_password;
+            const salt = result[0].salt;
+            rsa.decryptCallBack(token, private_key, uid, function(message){
+                message = message.split(':');
+                if(message.length != 4)
+                    res.end(JSON.stringify("[Token error]"));
+                else{
+                    var msgName = message[0];
+                    var msgPassword = message[1];
+                    var id = parseInt(message[2]);
+                    var aesKey = message[3];
+                    // Hash password from Login request with salt in Database
+                    var hashed_password = checkHashPassword(msgPassword, salt).passwordHash;
+
+                    if(encrypted_password == hashed_password && (msgName == name || msgName == email)){
+                        con.query('SELECT chol FROM heart WHERE id=?;', [id], function(error, result, fields){
+                            if(error){
+                                console.log('[MySQL error]', error);
+                            }
+                            res.end(aes.encrypt(JSON.stringify(result), aesKey));
+                        });
+                    }
+                    else
+                        res.end(JSON.stringify("Credential error")); 
+                }
+            });
+        } 
     });
 });
 
 app.get('/getBloodPressure/', (req, res, next)=>{
-    const id = req.query.id;
-    con.query('SELECT trestbps FROM heart WHERE id=?;', [id], function(error, result, fields){
+    const query = req.query;
+    const token = query.token;
+    const user = query.user;
+    con.query('SELECT * FROM user WHERE name=? OR email=?;', [user, user], function (error, result, fields) {
         if(error){
-            console.log('[MySQL ERROR]', error);
+            console.log('[MySQL error]', error);
         }
-        res.end(JSON.stringify(result));
+        if(result && result.length==1) {
+            const private_key = result[0].private_key;
+            const name = result[0].name;
+            const email = result[0].email;
+            const uid = result[0].unique_id;
+            const encrypted_password = result[0].encrypted_password;
+            const salt = result[0].salt;
+            rsa.decryptCallBack(token, private_key, uid, function(message){
+                message = message.split(':');
+                if(message.length != 4)
+                    res.end(JSON.stringify("[Token error]"));
+                else{
+                    var msgName = message[0];
+                    var msgPassword = message[1];
+                    var id = parseInt(message[2]);
+                    var aesKey = message[3];
+                    // Hash password from Login request with salt in Database
+                    var hashed_password = checkHashPassword(msgPassword, salt).passwordHash;
+
+                    if(encrypted_password == hashed_password && (msgName == name || msgName == email)){
+                        con.query('SELECT trestbps FROM heart WHERE id=?;', [id], function(error, result, fields){
+                            if(error){
+                                console.log('[MySQL error]', error);
+                            }
+                            res.end(aes.encrypt(JSON.stringify(result), aesKey));
+                        });
+                    }
+                    else
+                        res.end(JSON.stringify("Credential error")); 
+                }
+            });
+        } 
     });
 });
 
 app.get('/getThalach/', (req, res, next)=>{
-    const id = req.query.id;
-    con.query('SELECT thalach FROM heart WHERE id=?;', [id], function(error, result, fields){
+    const query = req.query;
+    const token = query.token;
+    const user = query.user;
+    con.query('SELECT * FROM user WHERE name=? OR email=?;', [user, user], function (error, result, fields) {
         if(error){
-            console.log('[MySQL ERROR]', error);
+            console.log('[MySQL error]', error);
         }
-        res.end(JSON.stringify(result));
+        if(result && result.length==1) {
+            const private_key = result[0].private_key;
+            const name = result[0].name;
+            const email = result[0].email;
+            const uid = result[0].unique_id;
+            const encrypted_password = result[0].encrypted_password;
+            const salt = result[0].salt;
+            rsa.decryptCallBack(token, private_key, uid, function(message){
+                message = message.split(':');
+                if(message.length != 4)
+                    res.end(JSON.stringify("[Token error]"));
+                else{
+                    var msgName = message[0];
+                    var msgPassword = message[1];
+                    var id = parseInt(message[2]);
+                    var aesKey = message[3];
+                    // Hash password from Login request with salt in Database
+                    var hashed_password = checkHashPassword(msgPassword, salt).passwordHash;
+
+                    if(encrypted_password == hashed_password && (msgName == name || msgName == email)){
+                        con.query('SELECT thalach FROM heart WHERE id=?;', [id], function(error, result, fields){
+                            if(error){
+                                console.log('[MySQL error]', error);
+                            }
+                            res.end(aes.encrypt(JSON.stringify(result), aesKey));
+                        });
+                    }
+                    else
+                        res.end(JSON.stringify("Credential error")); 
+                }
+            });
+        } 
     });
 });
 

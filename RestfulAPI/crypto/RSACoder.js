@@ -81,12 +81,12 @@ function verify(data, publicKey, signature) {
   return result;
 }
 
-generateKeysCallBack("password" , function(keyPair){
-  const enc = encrypt('hello', keyPair.PUBLIC_KEY);
-  console.log('enc', enc)
-  const dec = decrypt(enc, keyPair.PRIVATE_KEY, "password")
-  console.log('dec', dec)
-});
+// generateKeysCallBack("password" , function(keyPair){
+//   const enc = encrypt('hello', keyPair.PUBLIC_KEY);
+//   console.log('enc', enc)
+//   const dec = decrypt(enc, keyPair.PRIVATE_KEY, "password")
+//   console.log('dec', dec)
+// });
 
 module.exports = {
   generateKeys : generateKeys,
