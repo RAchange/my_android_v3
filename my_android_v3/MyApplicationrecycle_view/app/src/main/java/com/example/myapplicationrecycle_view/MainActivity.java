@@ -19,6 +19,9 @@ import com.example.myapplicationrecycle_view.Retrofit.User;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -81,22 +84,23 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
 
     private void getPatientList() throws Exception {
         moviesList = new ArrayList<String>();
-        String aesKey = AESCoder.initKeyString();
-        String buf = new String(user+":"+password+":"+aesKey);
+        byte[] aesKey = AESCoder.initKey();
+        String buf = new String(user+":"+password+":"+Base64.getEncoder().encodeToString(aesKey));
         String token = Base64.getEncoder().encodeToString(RSACoder.encryptByPublicKey(buf.getBytes(), snsPublicKey));
-        Call<List<User>> call = myAPI.getPatientList(user, token);
+        Call<String> call = myAPI.getPatientList(user, token);
 
-        call.enqueue(new Callback<List<User>>() {
+        call.enqueue(new Callback<String>() {
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+            public void onResponse(Call<String> call, Response<String> response) {
                 try {
-                    List<User> userList = response.body();
-                    if(userList.size() == 0) {
+                    String jsonString = AESCoder.decrypt(response.body(), aesKey);
+                    JSONArray userList = new JSONArray(jsonString);
+                    if(userList.length() == 0) {
                         Toast.makeText(MainActivity.this, "憑證過期: 請重新登入", Toast.LENGTH_SHORT).show();
                         MainActivity.super.finish();
                     }
-                    for(User user: userList)
-                        moviesList.add(user.getName());
+                    for(int i=0; i<userList.length(); i++)
+                        moviesList.add(userList.getJSONObject(i).getString("name"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -111,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.O
             }
 
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
+            public void onFailure(Call<String> call, Throwable t) {
                 Toast.makeText(MainActivity.this, "Server Internel Error", Toast.LENGTH_SHORT).show();
             }
         });

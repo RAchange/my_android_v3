@@ -31,14 +31,14 @@ public interface INodeJS {
     Call<String> getPublicKey(@Query("name") String name);
 
     @GET("getPatientList")
-    Call<List<User>> getPatientList(@Query("user") String user, @Query("token") String token);
+    Call<String> getPatientList(@Query("user") String user, @Query("token") String token);
 
     @GET("getChol")
-    Call<List<Chol>> getChol(@Query("id") int id);
+    Call<String> getChol(@Query("user") String user, @Query("token") String token);
 
     @GET("getBloodPressure")
-    Call<List<BloodPressure>> getBloodPressure(@Query("id") int id);
+    Call<String> getBloodPressure(@Query("user") String user, @Query("token") String token);
 
     @GET("getThalach")
-    Call<List<Thalach>> getThalach(@Query("id") int id);
+    Call<String> getThalach(@Query("user") String user, @Query("token") String token);
 }

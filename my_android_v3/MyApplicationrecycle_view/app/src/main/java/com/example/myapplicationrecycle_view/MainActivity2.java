@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.myapplicationrecycle_view.Crypto.AESCoder;
+import com.example.myapplicationrecycle_view.Crypto.RSACoder;
 import com.example.myapplicationrecycle_view.Retrofit.BloodPressure;
 import com.example.myapplicationrecycle_view.Retrofit.Chol;
 import com.example.myapplicationrecycle_view.Retrofit.INodeJS;
@@ -19,6 +22,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import org.json.JSONArray;
+
+import java.util.Base64;
 import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -38,8 +44,12 @@ public class MainActivity2 extends AppCompatActivity {
     private int[] thalach_list ;
     private int number_of_chol = 0;
     private int real_id  = 0;
+
     INodeJS myAPI;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
+
+    byte[] snsPublicKey = null;
+    String user = "", password = "";
 
     private void open_object(){
         blood_pressure = findViewById(R.id.blood_pressure);
@@ -57,6 +67,9 @@ public class MainActivity2 extends AppCompatActivity {
         Intent intent = getIntent();
         String name = intent.getStringExtra("name_data");
         String id = intent.getStringExtra("id_data");//傳id
+        snsPublicKey = intent.getByteArrayExtra("snsPublicKey");
+        user = intent.getStringExtra("user");
+        password = intent.getStringExtra("password");
         real_id = Integer.parseInt(id) + 1; //真正的id
         System.out.println("id=" + id);
         TextView text_name = (TextView) findViewById(R.id.name);
@@ -69,53 +82,111 @@ public class MainActivity2 extends AppCompatActivity {
         Retrofit retrofit = RetrofitClient.getInstance();
         myAPI = retrofit.create(INodeJS.class);
 
-        Call<List<Chol>> chol_call = myAPI.getChol(real_id);
-        chol_call.enqueue(new Callback<List<Chol>>() {
-            @Override
-            public void onResponse(Call<List<Chol>> call, Response<List<Chol>> response) {
-                int size = response.body().size();
-                chol_list = new int[size];
-                for(int i=0; i<size; i++)
-                    chol_list[i] = response.body().get(i).getChol();
-            }
+        try {
+            String token = null, encToken = null;
+            byte[] key1 = AESCoder.initKey(), key2 = AESCoder.initKey(), key3 = AESCoder.initKey();
+            String tokenPrefix = new String(user+":"+password+":"+Integer.toString(real_id)+":");
 
-            @Override
-            public void onFailure(Call<List<Chol>> call, Throwable t) {
+            token = new String(tokenPrefix + Base64.getEncoder().encodeToString(key1));
+            encToken = Base64.getEncoder().encodeToString(RSACoder.encryptByPublicKey(token.getBytes(), snsPublicKey));
+            Call<String> chol_call = myAPI.getChol(user, encToken);
+            chol_call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if(response.body().contains("error")){
+                        System.out.println(response.body());
+                        return;
+                    }
+                    try {
+                        System.out.println(response.body());
+                        String jsonString = AESCoder.decrypt(response.body(), key1);
+                        JSONArray userList = new JSONArray(jsonString);
+                        if(userList.length() == 0) {
+                            Toast.makeText(MainActivity2.this, "憑證過期: 請重新登入", Toast.LENGTH_SHORT).show();
+                            MainActivity2.super.finish();
+                        }
+                        chol_list = new int[userList.length()];
+                        for(int i=0; i<userList.length(); i++)
+                            chol_list[i]  = userList.getJSONObject(i).getInt("chol");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
-            }
-        });
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
 
-        Call<List<BloodPressure>> bps_call = myAPI.getBloodPressure(real_id);
-        bps_call.enqueue(new Callback<List<BloodPressure>>() {
-            @Override
-            public void onResponse(Call<List<BloodPressure>> call, Response<List<BloodPressure>> response) {
-                int size = response.body().size();
-                blood_pressure_list = new int[size];
-                for(int i=0; i<size; i++)
-                    blood_pressure_list[i] = response.body().get(i).getBps();
-            }
+                }
+            });
 
-            @Override
-            public void onFailure(Call<List<BloodPressure>> call, Throwable t) {
+            token = new String(tokenPrefix + Base64.getEncoder().encodeToString(key2));
+            encToken = Base64.getEncoder().encodeToString(RSACoder.encryptByPublicKey(token.getBytes(), snsPublicKey));
+            Call<String> bps_call = myAPI.getBloodPressure(user, encToken);
+            bps_call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if(response.body().contains("error")){
+                        System.out.println(response.body());
+                        return;
+                    }
+                    try {
+                        System.out.println(response.body());
+                        String jsonString = AESCoder.decrypt(response.body(), key2);
+                        JSONArray userList = new JSONArray(jsonString);
+                        if(userList.length() == 0) {
+                            Toast.makeText(MainActivity2.this, "憑證過期: 請重新登入", Toast.LENGTH_SHORT).show();
+                            MainActivity2.super.finish();
+                        }
+                        blood_pressure_list = new int[userList.length()];
+                        for(int i=0; i<userList.length(); i++)
+                            blood_pressure_list[i]  = userList.getJSONObject(i).getInt("trestbps");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
-            }
-        });
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
 
-        Call<List<Thalach>> thalach_call = myAPI.getThalach(real_id);
-        thalach_call.enqueue(new Callback<List<Thalach>>() {
-            @Override
-            public void onResponse(Call<List<Thalach>> call, Response<List<Thalach>> response) {
-                int size = response.body().size();
-                thalach_list = new int[size];
-                for(int i=0; i<size; i++)
-                    thalach_list[i] = response.body().get(i).getThalach();
-            }
+                }
+            });
 
-            @Override
-            public void onFailure(Call<List<Thalach>> call, Throwable t) {
+            token = new String(tokenPrefix + Base64.getEncoder().encodeToString(key3));
+            encToken = Base64.getEncoder().encodeToString(RSACoder.encryptByPublicKey(token.getBytes(), snsPublicKey));
+            Call<String> thalach_call = myAPI.getThalach(user, encToken);
+            thalach_call.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    if(response.body().contains("error")){
+                        System.out.println(response.body());
+                        return;
+                    }
+                    try {
+                        System.out.println(response.body());
+                        String jsonString = AESCoder.decrypt(response.body(), key3);
+                        JSONArray userList = new JSONArray(jsonString);
+                        if(userList.length() == 0) {
+                            Toast.makeText(MainActivity2.this, "憑證過期: 請重新登入", Toast.LENGTH_SHORT).show();
+                            MainActivity2.super.finish();
+                        }
+                        thalach_list = new int[userList.length()];
+                        for(int i=0; i<userList.length(); i++)
+                            thalach_list[i]  = userList.getJSONObject(i).getInt("thalach");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
 
-            }
-        });
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
 
         /*for(int i=0;i<50;i++){
             if(blood_pressure_list[i] == null){

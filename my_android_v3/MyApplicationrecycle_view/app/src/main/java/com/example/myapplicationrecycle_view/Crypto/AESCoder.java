@@ -1,15 +1,18 @@
 package com.example.myapplicationrecycle_view.Crypto;
 
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.security.Key;
+import java.util.logging.Logger;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
+import java.util.Base64;
 
 public abstract class AESCoder {
 
@@ -18,8 +21,7 @@ public abstract class AESCoder {
     public static final String CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
 
     private static Key toKey(byte[] key) throws Exception {
-        SecretKey secretKey = new SecretKeySpec(key, KEY_ALGORITHM);
-        return secretKey;
+        return new SecretKeySpec(MDCoder.encodeMD5(key), KEY_ALGORITHM);
     }
 
     public static byte[] decrypt(byte[] data, byte[] key) throws Exception {
@@ -40,17 +42,25 @@ public abstract class AESCoder {
 
     public static byte[] initKey() throws Exception {
         KeyGenerator kg = KeyGenerator.getInstance(KEY_ALGORITHM);
-        kg.init(256);
+        kg.init(128);
         SecretKey secretKey = kg.generateKey();
         return secretKey.getEncoded();
     }
 
     public static String initKeyString() throws Exception {
-        return Base64.encodeBase64String(initKey());
+        return Base64.getEncoder().encodeToString(initKey());
     }
 
     public static byte[] getKey(String key) throws Exception {
-        return Base64.decodeBase64(key);
+        return Base64.getDecoder().decode(key);
+    }
+
+    public static String decrypt(String data, byte[] key) throws Exception {
+        return new String(decrypt(Base64.getDecoder().decode(data.getBytes("ISO-8859-1")), key), "UTF-8");
+    }
+
+    public static String encrypt(String data, byte[] key) throws Exception {
+        return new String(Base64.getEncoder().encode(encrypt(data.getBytes("UTF-8"), key)), "ISO-8859-1");
     }
 
     public static byte[] decrypt(byte[] data, String key) throws Exception {
