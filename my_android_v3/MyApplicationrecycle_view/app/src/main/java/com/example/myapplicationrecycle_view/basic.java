@@ -61,10 +61,22 @@ public class basic extends AppCompatActivity {
         LocalDate now = LocalDate.now();
         String month = Integer.toString(now.getMonthValue());
         int maxn = Integer.min( thalach_list.length, 10);
-        for(int i=maxn;i>0;i--){
-            String day = Integer.toString(now.getDayOfMonth()-i);
-            day = month + "/" + day;
+        int tha_value = 0;
+        for(int i=10;i>0;i--){
+            String day = Integer.toString(i);
+            day = day + "days ago";
+            if(i >= thalach_list.length){
+                data.add(new ValueDataEntry(day,90));
+                tha_value = tha_value + 90;
+                continue;
+            }
             data.add(new ValueDataEntry(day,thalach_list[i]));
+            tha_value = tha_value + thalach_list[i];
+        }
+        tha_value = tha_value/10;
+        TextView note = (TextView)findViewById(R.id.textView3);
+        if(tha_value >= 100){
+            note.setText("此人應注意心血管疾病");
         }
         /*data.add(new ValueDataEntry("Rouge", 80540));
         data.add(new ValueDataEntry("Foundation", 94190));
@@ -87,7 +99,7 @@ public class basic extends AppCompatActivity {
                 .format("${%Value}{groupsSeparator: }");
 
         cartesian.animation(true);
-        cartesian.title("12/1~12/10 心率變化");
+        cartesian.title("10天內心率變化");
 
         cartesian.yScale().minimum(0d);
 
@@ -100,6 +112,22 @@ public class basic extends AppCompatActivity {
         cartesian.yAxis(0).title("數值");
 
         anyChartView.setChart(cartesian);
+    }
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.one_month:
+                Intent intent = new Intent(basic.this,tha_30day.class);
+                intent.putExtra("id_data",id);
+                intent.putExtra("name_data",name);
+                intent.putExtra("extra_data",thalach_list);
+                startActivity(intent);
+                break;
+            case R.id.ten_days:
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu){

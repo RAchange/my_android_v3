@@ -64,10 +64,23 @@ public class chol extends AppCompatActivity {
         LocalDate now = LocalDate.now();
         String month = Integer.toString(now.getMonthValue());
         int maxn = Integer.min( chol_list.length, 10);
-        for(int i=maxn;i>0;i--){
-            String day = Integer.toString(now.getDayOfMonth()-i);
-            day = month + "/" + day;
+        System.out.println(chol_list.length);
+        int chol_value = 0;
+        for(int i=10;i>0;i--){
+            String day = Integer.toString(i);
+            day = day + "days ago";
+            if(i >= chol_list.length){
+                data.add(new ValueDataEntry(day,230));
+                chol_value = chol_value + 230;
+                continue;
+            }
             data.add(new ValueDataEntry(day, chol_list[i]));
+            chol_value = chol_value + chol_list[i];
+        }
+        chol_value = chol_value/10;
+        TextView note = (TextView)findViewById(R.id.textView3);
+        if(chol_value >= 240){
+            note.setText("此人應注意高膽固醇");
         }
         /*data.add(new ValueDataEntry("Rouge", 80540));
         data.add(new ValueDataEntry("Foundation", 94190));
@@ -90,7 +103,7 @@ public class chol extends AppCompatActivity {
                 .format("{%Value}{groupsSeparator: }");
 
         cartesian.animation(true);
-        cartesian.title("12/1~12/10 膽固醇變化量");
+        cartesian.title("10天內膽固醇變化量");
 
         cartesian.yScale().minimum(0d);
 
@@ -104,6 +117,25 @@ public class chol extends AppCompatActivity {
 
         anyChartView.setChart(cartesian);
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.one_month:
+                Intent intent = new Intent(chol.this,chol_30day.class);
+                intent.putExtra("id_data",id);
+                intent.putExtra("name_data",name);
+                intent.putExtra("extra_data",chol_list);
+                startActivity(intent);
+                break;
+            case R.id.ten_days:
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.time_menu,menu);

@@ -31,21 +31,11 @@
 
     <TextView
         android:id="@+id/height_weight"
-        android:layout_width="128dp"
-        android:layout_height="32dp"
+        android:layout_width="147dp"
+        android:layout_height="53dp"
         android:layout_marginLeft="224dp"
         android:layout_marginTop="100dp"
         android:text="身高/體重：170/56"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/store_icon" />
-
-    <TextView
-        android:id="@+id/notification"
-        android:layout_width="136dp"
-        android:layout_height="25dp"
-        android:layout_marginLeft="216dp"
-        android:layout_marginTop="148dp"
-        android:text="此人應注意高血壓...."
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/store_icon" />
 

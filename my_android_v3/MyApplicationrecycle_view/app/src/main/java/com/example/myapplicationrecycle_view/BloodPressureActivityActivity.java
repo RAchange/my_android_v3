@@ -77,7 +77,7 @@ public class BloodPressureActivityActivity extends AppCompatActivity {
 
         cartesian.tooltip().positionMode(TooltipPositionMode.POINT);
 
-        cartesian.title("血壓變化");
+        cartesian.title("10天內血壓變化");
 
         cartesian.yAxis(0).title("數值");
         cartesian.xAxis(0).labels().padding(5d, 5d, 5d, 5d);
@@ -87,10 +87,23 @@ public class BloodPressureActivityActivity extends AppCompatActivity {
         LocalDate now = LocalDate.now();
         String month = Integer.toString(now.getMonthValue());
         int maxn = Integer.min( blood_pressure_list.length, 10);
-        for(int i=maxn;i>0;i--){
-            String day = Integer.toString(now.getDayOfMonth()-i);
-            String date = month + "/" + day;
+        int blood_value = 0;
+        for(int i=10;i>0;i--){
+            String day = Integer.toString(i);
+            String date = day + "days ago";
+            if(i >= blood_pressure_list.length){
+                seriesData.add(new ValueDataEntry(day,150));
+                blood_value = blood_value + 150;
+                continue;
+            }
             seriesData.add(new ValueDataEntry(date,blood_pressure_list[i - 1]));
+            blood_value = blood_value + blood_pressure_list[i-1];
+        }
+        blood_value = blood_value/10;
+        TextView note = (TextView)findViewById(R.id.textView3);
+        if(blood_value >= 140){
+            note.setText("此人應注意高血壓");
+
         }
         /*seriesData.add(new CustomDataEntry("1986", 3.6, 2.3, 2.8));
         seriesData.add(new CustomDataEntry("1987", 7.1, 4.0, 4.1));
