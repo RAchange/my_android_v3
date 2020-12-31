@@ -1,8 +1,10 @@
 package com.example.myapplicationrecycle_view;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -51,6 +53,23 @@ public class login_main extends AppCompatActivity {
         super.onDestroy();
     }
 
+    // detected 返回鍵 ,避免登出後用返回鍵回到裡面
+    public boolean onKeyDown(int KeyCode, KeyEvent event){
+        if(KeyCode == KeyEvent.KEYCODE_BACK){
+            AlertDialog.Builder alert = new AlertDialog.Builder(login_main.this);
+            alert.setTitle("登入");
+            alert.setMessage("請先登入...");
+            alert.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            alert.show();
+        }
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +108,8 @@ public class login_main extends AppCompatActivity {
             }
         });
 
+        /*
+
         // Forgot text
         final TextView forgot = (TextView)findViewById(R.id.forgot_password);
 
@@ -99,6 +120,8 @@ public class login_main extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        */
     }
 
     private void loginUser(String email, String password) throws Exception {
@@ -123,7 +146,7 @@ public class login_main extends AppCompatActivity {
                                 public void accept(String s) throws Exception {
                                     if(s.contains("successful")) {
                                         Toast.makeText(login_main.this, "Login Success", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(login_main.this, MainActivity.class);
+                                        Intent intent = new Intent(login_main.this, HomePage.class);
                                         intent.putExtra("snsPublicKey", snsPublicKey);
                                         intent.putExtra("password", password);
                                         intent.putExtra("user", email);
