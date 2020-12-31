@@ -12,18 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".tha_30day"></activity>
-        <activity android:name=".chol_30day" />
-        <activity android:name=".test" />
+        <activity android:name=".HomePage"></activity>
+        <activity android:name=".Visualization_Page" />
+        <activity android:name=".UserInfo" />
         <activity android:name=".sign_up" />
-        <activity android:name=".MainActivity" />
         <activity android:name=".forgot_password" />
-        <activity android:name=".chol" />
-        <activity android:name=".BloodPressureActivityActivity" />
-        <activity android:name=".basic" />
-        <activity
-            android:name=".MainActivity2"
-            android:label="@string/title_activity_main2" />
         <activity android:name=".login_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
