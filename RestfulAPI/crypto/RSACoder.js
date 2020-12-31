@@ -30,7 +30,7 @@ function decrypt(toDecrypt, privateKey, primaryPassword) {
 function decryptCallBack(toDecrypt, privateKey, primaryPassword, callBack) {
   const result = decrypt(toDecrypt, privateKey, primaryPassword);
   if(result == ""){
-    throw new Error("decrypt failed");
+    throw "decrypt failed";
   } else {
     callBack(result);
   }

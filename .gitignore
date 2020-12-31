@@ -1,3 +1,7 @@
 RestfulAPI/node_modules/
 RestfulAPI/node_modules/**
 RestfulAPI/package-lock.json
+RestfulAPI/keys/*.pem
+admin_panel/node_modules/
+admin_panel/node_modules/**
+admin_panel/package-lock.json
