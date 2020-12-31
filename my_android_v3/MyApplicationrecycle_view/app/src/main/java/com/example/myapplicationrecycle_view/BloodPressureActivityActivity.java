@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.anychart.core.cartesian.series.Column;
 import com.anychart.enums.HoverMode;
 import com.anychart.enums.Position;
+import com.example.myapplicationrecycle_view.Retrofit.BloodPressure;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -53,10 +54,7 @@ public class BloodPressureActivityActivity extends AppCompatActivity {
         return_to_uppage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BloodPressureActivityActivity.this,MainActivity2.class);
-                intent.putExtra("id_data",id);
-                intent.putExtra("name_data",name);
-                startActivity(intent);
+                BloodPressureActivityActivity.super.finish();
             }
         });
 

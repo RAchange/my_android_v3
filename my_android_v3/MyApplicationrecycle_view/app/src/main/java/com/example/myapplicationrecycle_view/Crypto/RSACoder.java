@@ -27,7 +27,7 @@ public abstract class RSACoder {
     public static final String KEY_ALGORITHM = "RSA";
     public static final String CIPHER_ALGORITHM = "RSA/ECB/OAEPWithSHA1AndMGF1Padding";
 
-    public static final String SIGNATURE_ALGORITHM = "SHA1withRSA";
+    public static final String SIGNATURE_ALGORITHM = "SHA512withRSA";
     private static final String PUBLIC_KEY = "RSAPublicKey";
     private static final String PRIVATE_KEY = "RSAPrivateKey";
 

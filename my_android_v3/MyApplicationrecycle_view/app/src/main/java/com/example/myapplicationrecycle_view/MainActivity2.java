@@ -83,12 +83,11 @@ public class MainActivity2 extends AppCompatActivity {
         myAPI = retrofit.create(INodeJS.class);
 
         try {
-            String token = null, encToken = null;
             byte[] key1 = AESCoder.initKey(), key2 = AESCoder.initKey(), key3 = AESCoder.initKey();
             String tokenPrefix = new String(user+":"+password+":"+Integer.toString(real_id)+":");
 
-            token = new String(tokenPrefix + Base64.getEncoder().encodeToString(key1));
-            encToken = Base64.getEncoder().encodeToString(RSACoder.encryptByPublicKey(token.getBytes(), snsPublicKey));
+            String token = new String(tokenPrefix + Base64.getEncoder().encodeToString(key1));
+            String encToken = Base64.getEncoder().encodeToString(RSACoder.encryptByPublicKey(token.getBytes(), snsPublicKey));
             Call<String> chol_call = myAPI.getChol(user, encToken);
             chol_call.enqueue(new Callback<String>() {
                 @Override
@@ -233,8 +232,7 @@ public class MainActivity2 extends AppCompatActivity {
         return_to_up_page.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity2.this,MainActivity.class);
-                startActivity(intent);
+                MainActivity2.super.finish();
             }
         });
         BottomNavigationView navView = findViewById(R.id.nav_view);

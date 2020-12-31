@@ -45,10 +45,7 @@ public class basic extends AppCompatActivity {
         return_to_uppage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(basic.this,MainActivity2.class);
-                intent.putExtra("id_data",id);
-                intent.putExtra("name_data",name);
-                startActivity(intent);
+                basic.super.finish();
             }
         });
         AnyChartView anyChartView = findViewById(R.id.any_chart_view);
@@ -113,22 +110,7 @@ public class basic extends AppCompatActivity {
 
         anyChartView.setChart(cartesian);
     }
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case R.id.one_month:
-                Intent intent = new Intent(basic.this,tha_30day.class);
-                intent.putExtra("id_data",id);
-                intent.putExtra("name_data",name);
-                intent.putExtra("extra_data",thalach_list);
-                startActivity(intent);
-                break;
-            case R.id.ten_days:
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.time_menu,menu);

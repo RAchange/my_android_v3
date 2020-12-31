@@ -48,10 +48,7 @@ public class chol extends AppCompatActivity {
         return_to_uppage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(chol.this,MainActivity2.class);
-                intent.putExtra("id_data",id);
-                intent.putExtra("name_data",name);
-                startActivity(intent);
+                chol.super.finish();
             }
         });
         AnyChartView anyChartView = findViewById(R.id.any_chart_view);
@@ -118,23 +115,23 @@ public class chol extends AppCompatActivity {
         anyChartView.setChart(cartesian);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch (item.getItemId()){
-            case R.id.one_month:
-                Intent intent = new Intent(chol.this,chol_30day.class);
-                intent.putExtra("id_data",id);
-                intent.putExtra("name_data",name);
-                intent.putExtra("extra_data",chol_list);
-                startActivity(intent);
-                break;
-            case R.id.ten_days:
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item){
+//        switch (item.getItemId()){
+//            case R.id.one_month:
+//                Intent intent = new Intent(chol.this,chol_30day.class);
+//                intent.putExtra("id_data",id);
+//                intent.putExtra("name_data",name);
+//                intent.putExtra("extra_data",chol_list);
+//                startActivity(intent);
+//                break;
+//            case R.id.ten_days:
+//                break;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//        return true;
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
