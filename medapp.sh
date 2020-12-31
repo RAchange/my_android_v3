@@ -15,7 +15,7 @@ SERVICE_NAME=`basename $0`
 PIDFILE=/var/run/medapp.pid
 LOGPATH="/var/log/${SERVICE_NAME}"
 FOREVER_BIN=`which forever`
-APP_PATH="/root/my_android_v3/RestfulAPI/index.js"
+APP_PATH="/opt/my_android_v3/RestfulAPI/index.js"
  
 case $1 in
  start)
